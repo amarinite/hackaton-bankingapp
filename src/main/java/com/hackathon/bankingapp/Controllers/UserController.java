@@ -1,17 +1,11 @@
 package com.hackathon.bankingapp.Controllers;
 
-import com.hackathon.bankingapp.Entities.AuthRequest;
-import com.hackathon.bankingapp.Entities.AuthResponse;
-import com.hackathon.bankingapp.Entities.RegisterRequest;
-import com.hackathon.bankingapp.Entities.User;
+import com.hackathon.bankingapp.Entities.*;
 import com.hackathon.bankingapp.Services.Impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,7 +15,7 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest request) {
+    public ResponseEntity<RegisterResponse> registerUser(@RequestBody RegisterRequest request) {
         return  ResponseEntity.ok(userService.registerUser(request));
     }
 
