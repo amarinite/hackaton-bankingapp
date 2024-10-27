@@ -1,8 +1,12 @@
 package com.hackathon.bankingapp.Controllers;
 
-import com.hackathon.bankingapp.Entities.*;
+import com.hackathon.bankingapp.DTO.AuthRequest;
+import com.hackathon.bankingapp.DTO.AuthResponse;
+import com.hackathon.bankingapp.DTO.RegisterRequest;
+import com.hackathon.bankingapp.DTO.RegisterResponse;
 import com.hackathon.bankingapp.Services.Impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,17 +28,15 @@ public class UserController {
         return  ResponseEntity.ok(userService.loginUser(request));
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<String> logoutUser(@RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Authorization header is missing or invalid.");
+        }
+        String token = authHeader.substring(7);
+        // userService.logout(token);
 
-//        String identifier = loginRequest.get("identifier");
-//        String password = loginRequest.get("password");
-//        Optional<User> user = userService.loginUser(identifier, password);
-//
-//        if (user.isPresent()) {
-//            // TODO: generate JWT
-//            String token = "generated_jwt_token"; // Placeholder for actual JWT generation
-//            return ResponseEntity.ok(Map.of("token", token));
-//        }
-//
-//        return ResponseEntity.status(401).body("Bad credentials");
-//    }
+        return ResponseEntity.ok("User logged out successfully.");
+    }
 }

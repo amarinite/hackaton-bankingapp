@@ -1,4 +1,4 @@
-package com.hackathon.bankingapp.Entities;
+package com.hackathon.bankingapp.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

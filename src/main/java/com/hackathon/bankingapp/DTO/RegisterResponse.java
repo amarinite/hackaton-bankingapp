@@ -1,4 +1,4 @@
-package com.hackathon.bankingapp.Entities;
+package com.hackathon.bankingapp.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class RegisterResponse {
     private String name;
-    private String password;
     private String email;
     private String phoneNumber;
     private String address;
+    private String accountNumber;
+    private String hashedPassword;
 }

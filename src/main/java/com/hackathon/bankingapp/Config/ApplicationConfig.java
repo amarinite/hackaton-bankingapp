@@ -1,9 +1,11 @@
 package com.hackathon.bankingapp.Config;
 
+import com.hackathon.bankingapp.Entities.User;
 import com.hackathon.bankingapp.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,6 +15,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -21,14 +25,22 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return identifier -> {
+            Optional<User> userOptional;
+            if (identifier.contains("@")) {
+                userOptional = userRepository.findByEmail(identifier);
+            } else {
+                userOptional = userRepository.findByAccountNumber(identifier);
+            }
+            return userOptional.orElseThrow(() ->
+                    new UsernameNotFoundException("User not found with identifier: " + identifier));
+        };
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
@@ -43,3 +55,4 @@ public class ApplicationConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
